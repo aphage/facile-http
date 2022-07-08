@@ -31,6 +31,8 @@ cmake --install build
 ## use facile-http
 
 ```cpp
+#include <facile_http/facile_http.h>
+
 facile_http::HttpClient client;
 
 auto response = client.send(facile_http::Request::Builder().url("https://bing.com").GET().build());
