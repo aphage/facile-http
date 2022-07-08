@@ -55,7 +55,7 @@ int main() {
     auto response = client.send(facile_http::Request::Builder().url("https://bing.com").GET().build());
     
     std::cout << "status code: " << response->status_code() \
-    << " message: " << response->status_message() << std::endl;
+        << " message: " << response->status_message() << std::endl;
 
     // print headers
     for(auto& n:response->headers()) {
@@ -65,18 +65,18 @@ int main() {
 
     std::cout << "response: " << response->body() << std::endl;
 
-    auto response2 = client.download(facile_http::Request::Builder().url("https://speed.hetzner.de/100MB.bin").build(), "./100MB.bin");
+    response = client.download(facile_http::Request::Builder().url("https://speed.hetzner.de/100MB.bin").build(), "./100MB.bin");
 
-    std::cout << "status code: " << response2->status_code() \
-    << " message: " << response2->status_message() << std::endl;
+    std::cout << "status code: " << response->status_code() \
+        << " message: " << response->status_message() << std::endl;
 
     // print headers
-    for(auto& n:response2->headers()) {
+    for(auto& n:response->headers()) {
         std::cout << n.first << ": " << n.second << std::endl;
     }
     std::cout << std::endl;
 
-    std::cout << "response: " << response2->body() << std::endl;
+    std::cout << "response: " << response->body() << std::endl;
 
     return 0;
 }

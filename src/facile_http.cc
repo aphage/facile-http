@@ -62,6 +62,7 @@ static std::unordered_map<std::string, std::string> parse_header(const std::stri
 class HttpClient::Foo {
 public:
     CURL* curl = nullptr;
+    const std::string version = "1.0.0";
 };
 
 HttpClient::HttpClient() {
@@ -95,6 +96,126 @@ void HttpClient::ssl_verify_peer(bool verify) {
 
 void HttpClient::ssl_verify_host(bool verify) {
     curl_easy_setopt(foo->curl, CURLOPT_SSL_VERIFYHOST, verify ? 2 : 0);
+}
+
+void HttpClient::ssl_cert(const std::string& cert) {
+    curl_easy_setopt(foo->curl, CURLOPT_SSLCERT, cert.c_str());
+}
+
+void HttpClient::ssl_cert(const std::vector<std::uint8_t>& cert) {
+    struct curl_blob blob;
+    blob.data = const_cast<std::uint8_t*>(cert.data());
+    blob.len = cert.size();
+    blob.flags = CURL_BLOB_COPY;
+    curl_easy_setopt(foo->curl, CURLOPT_SSLCERT_BLOB, &blob);
+}
+
+void HttpClient::ssl_cert_type(const std::string& cert_type) {
+    curl_easy_setopt(foo->curl, CURLOPT_SSLCERTTYPE, cert_type.c_str());
+}
+
+void HttpClient::ssl_key(const std::string& key) {
+    curl_easy_setopt(foo->curl, CURLOPT_SSLKEY, key.c_str());
+}
+
+void HttpClient::ssl_key(const std::vector<std::uint8_t>& key) {
+    struct curl_blob blob;
+    blob.data = const_cast<std::uint8_t*>(key.data());
+    blob.len = key.size();
+    blob.flags = CURL_BLOB_COPY;
+    curl_easy_setopt(foo->curl, CURLOPT_SSLKEY_BLOB, &blob);
+}
+
+void HttpClient::ssl_key_type(const std::string& key_type) {
+    curl_easy_setopt(foo->curl, CURLOPT_SSLKEYTYPE, key_type.c_str());
+}
+
+void HttpClient::ssl_key_password(const std::string& key_password) {
+    curl_easy_setopt(foo->curl, CURLOPT_KEYPASSWD, key_password.c_str());
+}
+
+void HttpClient::ssl_cainfo(const std::string& cainfo) {
+    curl_easy_setopt(foo->curl, CURLOPT_CAINFO, cainfo.c_str());
+}
+
+void HttpClient::ssl_cainfo(const std::vector<std::uint8_t>& cainfo) {
+    struct curl_blob blob;
+    blob.data = const_cast<std::uint8_t*>(cainfo.data());
+    blob.len = cainfo.size();
+    blob.flags = CURL_BLOB_COPY;
+    curl_easy_setopt(foo->curl, CURLOPT_CAINFO_BLOB, &blob);
+}
+
+void HttpClient::ssl_cadir(const std::string& cadir) {
+    curl_easy_setopt(foo->curl, CURLOPT_CAPATH, cadir.c_str());
+}
+
+void HttpClient::ssl_crl(const std::string& crl) {
+    curl_easy_setopt(foo->curl, CURLOPT_CRLFILE, crl.c_str());
+}
+
+void HttpClient::ssl_proxy_verify_peer(bool verify) {
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_SSL_VERIFYPEER, verify ? 1 : 0);
+}
+
+void HttpClient::ssl_proxy_verify_host(bool verify) {
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_SSL_VERIFYHOST, verify ? 2 : 0);
+}
+
+void HttpClient::ssl_proxy_cert(const std::string& cert) {
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_SSLCERT, cert.c_str());
+}
+
+void HttpClient::ssl_proxy_cert(const std::vector<std::uint8_t>& cert) {
+    struct curl_blob blob;
+    blob.data = const_cast<std::uint8_t*>(cert.data());
+    blob.len = cert.size();
+    blob.flags = CURL_BLOB_COPY;
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_SSLCERT_BLOB, &blob);
+}
+
+void HttpClient::ssl_proxy_cert_type(const std::string& cert_type) {
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_SSLCERTTYPE, cert_type.c_str());
+}
+
+void HttpClient::ssl_proxy_key(const std::string& key) {
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_SSLKEY, key.c_str());
+}
+
+void HttpClient::ssl_proxy_key(const std::vector<std::uint8_t>& key) {
+    struct curl_blob blob;
+    blob.data = const_cast<std::uint8_t*>(key.data());
+    blob.len = key.size();
+    blob.flags = CURL_BLOB_COPY;
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_SSLKEY_BLOB, &blob);
+}
+
+void HttpClient::ssl_proxy_key_type(const std::string& key_type) {
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_SSLKEYTYPE, key_type.c_str());
+}
+
+void HttpClient::ssl_proxy_key_password(const std::string& key_password) {
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_KEYPASSWD, key_password.c_str());
+}
+
+void HttpClient::ssl_proxy_cainfo(const std::string& cainfo) {
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_CAINFO, cainfo.c_str());
+}
+
+void HttpClient::ssl_proxy_cainfo(const std::vector<std::uint8_t>& cainfo) {
+    struct curl_blob blob;
+    blob.data = const_cast<std::uint8_t*>(cainfo.data());
+    blob.len = cainfo.size();
+    blob.flags = CURL_BLOB_COPY;
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_CAINFO_BLOB, &blob);
+}
+
+void HttpClient::ssl_proxy_cadir(const std::string& cadir) {
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_CAPATH, cadir.c_str());
+}
+
+void HttpClient::ssl_proxy_crl(const std::string& crl) {
+    curl_easy_setopt(foo->curl, CURLOPT_PROXY_CRLFILE, crl.c_str());
 }
 
 void HttpClient::user_agent(const std::string& user_agent) {
@@ -143,6 +264,26 @@ void HttpClient::tcp_keepalive_idle(const std::chrono::seconds& idle) {
 
 void HttpClient::tcp_keepalive_interval(const std::chrono::seconds& interval) {
     curl_easy_setopt(foo->curl, CURLOPT_TCP_KEEPINTVL, (long)interval.count());
+}
+
+void HttpClient::fllow_redirects(bool follow_redirects) {
+    curl_easy_setopt(foo->curl, CURLOPT_FOLLOWLOCATION, follow_redirects ? 1 : 0);
+}
+
+void HttpClient::max_redirects(int max_redirects) {
+    curl_easy_setopt(foo->curl, CURLOPT_MAXREDIRS, max_redirects);
+}
+
+void HttpClient::upload_buffer_size(std::uint32_t size) {
+    curl_easy_setopt(foo->curl, CURLOPT_UPLOAD_BUFFERSIZE, size);
+}
+
+void HttpClient::buffer_size(std::uint32_t size) {
+    curl_easy_setopt(foo->curl, CURLOPT_BUFFERSIZE, size);
+}
+
+const std::string& HttpClient::version() {
+    return foo->version;
 }
 
 std::unique_ptr<Response> HttpClient::send(const Request& request) {
